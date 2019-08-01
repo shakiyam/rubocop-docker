@@ -10,7 +10,6 @@ RUN apk update \
   && find /usr/local/bundle/gems/ -name "*.c" -delete \
   && find /usr/local/bundle/gems/ -name "*.o" -delete \
   && apk del .build-dependencies
-USER nobody:nobody
 WORKDIR /work
 VOLUME /work
 ENTRYPOINT ["rubocop"]

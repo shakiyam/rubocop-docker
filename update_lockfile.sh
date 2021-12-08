@@ -8,10 +8,10 @@ if [[ $(command -v podman) ]]; then
     --name update_lockfile$$ \
     --rm \
     --security-opt label=disable \
-    -v "$script_dir/Gemfile":/work/Gemfile \
+    -v "$script_dir/Gemfile":/work/Gemfile:ro \
     -v "$script_dir/Gemfile.lock":/work/Gemfile.lock \
     -w /work \
-    ruby:alpine sh -c 'HOME=/tmp bundle lock --update'
+    docker.io/ruby:alpine sh -c 'HOME=/tmp bundle lock --update'
 else
   docker container run \
     --name update_lockfile$$ \

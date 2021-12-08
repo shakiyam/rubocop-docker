@@ -5,9 +5,9 @@ if [[ $(command -v podman) ]]; then
   podman container run \
     --name rubocop$$ \
     --rm \
-    --security-opt label=disable \
     -t \
-    -v "$PWD":/work \
+    --security-opt label=disable \
+    -v "$PWD":/work:ro \
     shakiyam/rubocop "$@"
 else
   docker container run \

@@ -13,23 +13,23 @@ all: hadolint shellcheck shfmt update_lockfile build ## Lint, update Gemfile.loc
 
 build: ## Build an image from a Dockerfile
 	@echo -e "\033[36m$@\033[0m"
-	@./build.sh
+	@./tools/build.sh
 
 hadolint: ## Lint Dockerfile
 	@echo -e "\033[36m$@\033[0m"
-	@./hadolint.sh Dockerfile
+	@./tools/hadolint.sh Dockerfile
 
 shellcheck: ## Lint shell scripts
 	@echo -e "\033[36m$@\033[0m"
-	@./shellcheck.sh rubocop *.sh
+	@./tools/shellcheck.sh rubocop tools/*.sh
 
 shfmt: ## Lint shell scripts
 	@echo -e "\033[36m$@\033[0m"
-	@./shfmt.sh -l -d -i 2 -ci -bn rubocop *.sh
+	@./tools/shfmt.sh -l -d -i 2 -ci -bn rubocop tools/*.sh
 
 update_lockfile: ## Update Gemfile.lock
 	@echo -e "\033[36m$@\033[0m"
-	@./update_lockfile.sh
+	@./tools/update_lockfile.sh
 
 help: ## Print this help
 	@echo 'Usage: make [target]'

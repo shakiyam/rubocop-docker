@@ -25,7 +25,7 @@ shellcheck: ## Lint shell scripts
 
 shfmt: ## Lint shell scripts
 	@echo -e "\033[36m$@\033[0m"
-	@./shfmt.sh -l -d -i 2 -ci -bn *.sh
+	@./shfmt.sh -l -d -i 2 -ci -bn rubocop *.sh
 
 update_lockfile: ## Update Gemfile.lock
 	@echo -e "\033[36m$@\033[0m"

@@ -1,4 +1,4 @@
-FROM ruby:alpine
+FROM ruby:3.1-alpine3.15
 WORKDIR /root
 COPY Gemfile /root/
 COPY Gemfile.lock /root/

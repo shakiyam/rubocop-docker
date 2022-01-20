@@ -2,16 +2,7 @@
 set -eu -o pipefail
 
 [[ -e Gemfile.lock ]] || touch Gemfile.lock
-if [[ $(command -v podman) ]]; then
-  podman container run \
-    --name update_lockfile$$ \
-    --rm \
-    --security-opt label=disable \
-    -v "$PWD/Gemfile":/work/Gemfile:ro \
-    -v "$PWD/Gemfile.lock":/work/Gemfile.lock \
-    -w /work \
-    docker.io/ruby:alpine sh -c 'HOME=/tmp bundle lock --update'
-else
+if [[ $(command -v docker) ]]; then
   docker container run \
     --name update_lockfile$$ \
     --rm \
@@ -20,4 +11,13 @@ else
     -v "$PWD/Gemfile.lock":/work/Gemfile.lock \
     -w /work \
     ruby:alpine sh -c 'HOME=/tmp bundle lock --update'
+else
+  podman container run \
+    --name update_lockfile$$ \
+    --rm \
+    --security-opt label=disable \
+    -v "$PWD/Gemfile":/work/Gemfile:ro \
+    -v "$PWD/Gemfile.lock":/work/Gemfile.lock \
+    -w /work \
+    docker.io/ruby:alpine sh -c 'HOME=/tmp bundle lock --update'
 fi

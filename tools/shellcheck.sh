@@ -7,7 +7,7 @@ if [[ $(command -v docker) ]]; then
     --rm \
     -u "$(id -u):$(id -g)" \
     -v "$PWD":/mnt:ro \
-    koalaman/shellcheck:stable "$@"
+    docker.io/koalaman/shellcheck:stable "$@"
 else
   podman container run \
     --name shellcheck$$ \

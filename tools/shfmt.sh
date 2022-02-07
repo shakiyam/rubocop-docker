@@ -8,7 +8,7 @@ if [[ $(command -v docker) ]]; then
     -u "$(id -u):$(id -g)" \
     -v "$PWD":/work:ro \
     -w /work \
-    mvdan/shfmt:latest "$@"
+    docker.io/mvdan/shfmt:latest "$@"
 else
   podman container run \
     --name shfmt$$ \

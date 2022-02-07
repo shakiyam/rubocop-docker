@@ -13,7 +13,7 @@ if [[ $(command -v docker) ]]; then
     -u "$(id -u):$(id -g)" \
     -v "$PWD":/work:ro \
     -w /work \
-    hadolint/hadolint hadolint "$@"
+    docker.io/hadolint/hadolint hadolint "$@"
 else
   podman container run \
     --name hadolint$$ \

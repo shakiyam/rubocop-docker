@@ -10,7 +10,7 @@ if [[ $(command -v docker) ]]; then
     -v "$PWD/Gemfile":/work/Gemfile:ro \
     -v "$PWD/Gemfile.lock":/work/Gemfile.lock \
     -w /work \
-    docker.io/ruby:3.1-alpine3.15 sh -c 'HOME=/tmp bundle lock --update'
+    docker.io/ruby:3.1-alpine3.16 sh -c 'HOME=/tmp bundle lock --update'
 else
   podman container run \
     --name update_lockfile$$ \
@@ -19,5 +19,5 @@ else
     -v "$PWD/Gemfile":/work/Gemfile:ro \
     -v "$PWD/Gemfile.lock":/work/Gemfile.lock \
     -w /work \
-    docker.io/ruby:3.1-alpine3.15 sh -c 'HOME=/tmp bundle lock --update'
+    docker.io/ruby:3.1-alpine3.16 sh -c 'HOME=/tmp bundle lock --update'
 fi

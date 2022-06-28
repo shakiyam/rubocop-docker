@@ -11,4 +11,5 @@ RUN apk add --no-cache --virtual=.build-dependencies gcc make musl-dev \
   && apk del --purge .build-dependencies
 WORKDIR /work
 VOLUME /work
+ENV HOME /tmp
 ENTRYPOINT ["rubocop"]

@@ -1,6 +1,11 @@
 #!/bin/bash
 set -eu -o pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+readonly SCRIPT_DIR
+# shellcheck disable=SC1091
+. "$SCRIPT_DIR"/colored_echo.sh
+
 [[ -e Gemfile.lock ]] || touch Gemfile.lock
 if [[ $(command -v docker) ]]; then
   docker container run \
@@ -21,6 +26,6 @@ elif [[ $(command -v podman) ]]; then
     -w /work \
     docker.io/ruby:3.1-alpine3.16 sh -c 'HOME=/tmp bundle lock --update'
 else
-  echo 'Neither docker nor podman is installed.'
+  echo_error 'Neither docker nor podman is installed.'
   exit 1
 fi

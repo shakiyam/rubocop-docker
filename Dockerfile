@@ -1,4 +1,4 @@
-FROM docker.io/ruby:3.1-alpine3.16
+FROM docker.io/ruby:3.1-alpine3.17
 WORKDIR /root
 COPY Gemfile /root/
 COPY Gemfile.lock /root/

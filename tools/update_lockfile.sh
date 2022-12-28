@@ -29,7 +29,7 @@ if [[ $(command -v docker) ]]; then
     -v "$PWD/Gemfile":/work/Gemfile:ro \
     -v "$PWD/Gemfile.lock":/work/Gemfile.lock \
     -w /work \
-    docker.io/ruby:3.1-alpine3.17 sh -c 'HOME=/tmp bundle lock --update'
+    docker.io/ruby:3.2-alpine3.17 sh -c 'HOME=/tmp bundle lock --update'
 elif [[ $(command -v podman) ]]; then
   podman container run \
     --name update_lockfile$$ \
@@ -38,7 +38,7 @@ elif [[ $(command -v podman) ]]; then
     -v "$PWD/Gemfile":/work/Gemfile:ro \
     -v "$PWD/Gemfile.lock":/work/Gemfile.lock \
     -w /work \
-    docker.io/ruby:3.1-alpine3.17 sh -c 'HOME=/tmp bundle lock --update'
+    docker.io/ruby:3.2-alpine3.17 sh -c 'HOME=/tmp bundle lock --update'
 else
   echo_error 'Neither docker nor podman is installed.'
   exit 1

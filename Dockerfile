@@ -1,14 +1,8 @@
-FROM docker.io/ruby:3.2-alpine3.17
+FROM ghcr.io/ruby/ruby:3.2-jammy
 WORKDIR /root
 COPY Gemfile /root/
 COPY Gemfile.lock /root/
-# hadolint ignore=DL3018
-RUN apk add --no-cache --virtual=.build-dependencies gcc make musl-dev \
-  && bundle install \
-  && rm -rf /root/.bundle/cache \
-  && rm -rf /usr/local/bundle/cache/*.gem \
-  && find /usr/local/bundle/gems/ -regex ".*\.[cho]" -delete \
-  && apk del --purge .build-dependencies
+RUN bundle install && rm -rf /root/.bundle/cache
 WORKDIR /work
 VOLUME /work
 ENV HOME /tmp

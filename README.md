@@ -7,7 +7,7 @@ How to Use
 ----------
 
 ```console
-docker container run --rm -t -u "$(id -u):$(id -g)" -v "$PWD":/work:ro docker.io/shakiyam/rubocop
+docker container run --rm -t -u "$(id -u):$(id -g)" -v "$PWD":/work:ro ghcr.io/shakiyam/rubocop
 ```
 
 Author

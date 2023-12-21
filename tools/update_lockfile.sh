@@ -29,7 +29,7 @@ if [[ $(command -v docker) ]]; then
     -v "$PWD/Gemfile":/work/Gemfile:ro \
     -v "$PWD/Gemfile.lock":/work/Gemfile.lock \
     -w /work \
-    ghcr.io/ruby/ruby:3.2-jammy sh -c 'HOME=/tmp bundle lock --update --add-platform arm64-linux x86_64-linux'
+    ghcr.io/ruby/ruby:3.2-jammy sh -c 'HOME=/tmp bundle lock --update --add-platform aarch64-linux x86_64-linux'
 elif [[ $(command -v podman) ]]; then
   podman container run \
     --name update_lockfile$$ \
@@ -38,7 +38,7 @@ elif [[ $(command -v podman) ]]; then
     -v "$PWD/Gemfile":/work/Gemfile:ro \
     -v "$PWD/Gemfile.lock":/work/Gemfile.lock \
     -w /work \
-    ghcr.io/ruby/ruby:3.2-jammy sh -c 'HOME=/tmp bundle lock --update --add-platform arm64-linux x86_64-linux'
+    ghcr.io/ruby/ruby:3.2-jammy sh -c 'HOME=/tmp bundle lock --update --add-platform aarch64-linux x86_64-linux'
 else
   echo_error 'Neither docker nor podman is installed.'
   exit 1

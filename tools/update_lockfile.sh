@@ -21,7 +21,7 @@ done
 shift $((OPTIND - 1))
 
 [[ -e Gemfile.lock ]] || touch Gemfile.lock
-if [[ $(command -v docker) ]]; then
+if command -v docker &>/dev/null; then
   docker container run \
     --name update_lockfile$$ \
     --rm \
@@ -30,7 +30,7 @@ if [[ $(command -v docker) ]]; then
     -v "$PWD/Gemfile.lock":/work/Gemfile.lock \
     -w /work \
     ghcr.io/ruby/ruby:3.2.2-jammy sh -c 'HOME=/tmp bundle lock --update --add-platform aarch64-linux x86_64-linux'
-elif [[ $(command -v podman) ]]; then
+elif command -v podman &>/dev/null; then
   podman container run \
     --name update_lockfile$$ \
     --rm \

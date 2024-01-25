@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eu -o pipefail
 
-if [[ $(command -v docker) ]]; then
+if command -v docker &>/dev/null; then
   docker container run \
     --name rubocop$$ \
     --rm \
@@ -9,7 +9,7 @@ if [[ $(command -v docker) ]]; then
     -u "$(id -u):$(id -g)" \
     -v "$PWD":/work:ro \
     ghcr.io/shakiyam/rubocop "$@"
-elif [[ $(command -v podman) ]]; then
+elif command -v podman &>/dev/null; then
   podman container run \
     --name rubocop$$ \
     --rm \

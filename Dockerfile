@@ -1,4 +1,4 @@
-FROM ghcr.io/ruby/ruby:3.2.2-jammy AS builder
+FROM public.ecr.aws/docker/library/ruby:3.3.0-bookworm AS builder
 ENV GEM_HOME=/usr/local/bundle
 WORKDIR /root
 COPY Gemfile /root/
@@ -12,7 +12,7 @@ RUN apt-get update \
   && rm -rf /usr/local/bundle/cache/*.gem \
   && find /usr/local/bundle/gems/ -regex ".*\.[cho]" -delete
 
-FROM ghcr.io/ruby/ruby:3.2.2-jammy
+FROM public.ecr.aws/docker/library/ruby:3.3.0-bookworm
 ENV GEM_HOME=/usr/local/bundle
 ENV PATH=$GEM_HOME/bin:$PATH
 COPY --from=builder $GEM_HOME $GEM_HOME

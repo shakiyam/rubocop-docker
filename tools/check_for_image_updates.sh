@@ -6,6 +6,16 @@ readonly SCRIPT_DIR
 # shellcheck disable=SC1091
 . "$SCRIPT_DIR"/colored_echo.sh
 
+case $(uname -m) in
+  x86_64)
+    ARCHITECTURE=amd64
+    ;;
+  aarch64)
+    ARCHITECTURE=arm64
+    ;;
+esac
+readonly ARCHITECTURE
+
 if command -v regctl &>/dev/null; then
   REGCTL=regctl
 else
@@ -18,15 +28,6 @@ else
         | awk -F'/' '/^[Ll]ocation:/{print $NF}'
     )
     readonly LATEST
-    case $(uname -m) in
-      x86_64)
-        ARCHITECTURE=amd64
-        ;;
-      aarch64)
-        ARCHITECTURE=arm64
-        ;;
-    esac
-    readonly ARCHITECTURE
     curl -L# "https://github.com/regclient/regclient/releases/download/${LATEST}/regctl-linux-${ARCHITECTURE}" >"$REGCTL"
     chmod +x "$REGCTL"
   fi
@@ -41,9 +42,9 @@ readonly IMAGE_NAME1=$1
 readonly IMAGE_NAME2=$2
 
 echo_info "$IMAGE_NAME1 and $IMAGE_NAME2"
-IMAGE_DIGEST1="$("$REGCTL" manifest digest "$IMAGE_NAME1")"
+IMAGE_DIGEST1="$("$REGCTL" manifest digest -p "linux/${ARCHITECTURE}" "$IMAGE_NAME1")"
 readonly IMAGE_DIGEST1
-IMAGE_DIGEST2="$("$REGCTL" manifest digest "$IMAGE_NAME2")"
+IMAGE_DIGEST2="$("$REGCTL" manifest digest -p "linux/${ARCHITECTURE}" "$IMAGE_NAME2")"
 readonly IMAGE_DIGEST2
 if [[ "$IMAGE_DIGEST1" != "$IMAGE_DIGEST2" ]]; then
   echo_warn "$IMAGE_NAME1 and $IMAGE_NAME2 are not the same."

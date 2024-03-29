@@ -1,11 +1,10 @@
 FROM public.ecr.aws/docker/library/ruby:3.3.0-slim-bookworm AS builder
-ENV GEM_HOME=/usr/local/bundle
 WORKDIR /root
 COPY Gemfile /root/
 COPY Gemfile.lock /root/
-# hadolint ignore=DL3008,DL3015
+# hadolint ignore=DL3008
 RUN apt-get update \
-  && apt-get -y install gcc make \
+  && apt-get -y install --no-install-recommends gcc make \
   && rm -rf /var/lib/apt/lists/* \
   && bundle install \
   && rm -rf /root/.bundle/cache \
@@ -13,9 +12,7 @@ RUN apt-get update \
   && find /usr/local/bundle/gems/ -regex ".*\.[cho]" -delete
 
 FROM public.ecr.aws/docker/library/ruby:3.3.0-slim-bookworm
-ENV GEM_HOME=/usr/local/bundle
-ENV PATH=$GEM_HOME/bin:$PATH
-COPY --from=builder $GEM_HOME $GEM_HOME
+COPY --from=builder /usr/local/bundle /usr/local/bundle
 WORKDIR /work
 VOLUME /work
 USER nobody:nogroup

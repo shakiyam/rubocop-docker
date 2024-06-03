@@ -1,4 +1,4 @@
-FROM public.ecr.aws/docker/library/ruby:3.3.1-slim-bookworm AS builder
+FROM public.ecr.aws/docker/library/ruby:3.3.2-slim-bookworm AS builder
 WORKDIR /root
 COPY Gemfile /root/
 COPY Gemfile.lock /root/
@@ -11,7 +11,7 @@ RUN apt-get update \
   && rm -rf /usr/local/bundle/cache/*.gem \
   && find /usr/local/bundle/gems/ -regex ".*\.[cho]" -delete
 
-FROM public.ecr.aws/docker/library/ruby:3.3.1-slim-bookworm
+FROM public.ecr.aws/docker/library/ruby:3.3.2-slim-bookworm
 COPY --from=builder /usr/local/bundle /usr/local/bundle
 WORKDIR /work
 VOLUME /work

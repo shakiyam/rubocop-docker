@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eu -o pipefail
+set -Eeu -o pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 readonly SCRIPT_DIR
@@ -23,7 +23,7 @@ shift $((OPTIND - 1))
 [[ -e Gemfile.lock ]] || touch Gemfile.lock
 if command -v docker &>/dev/null; then
   docker container run \
-    --name update_lockfile$$ \
+    --name "update_lockfile_$(uuidgen | head -c8)" \
     --rm \
     -u "$(id -u):$(id -g)" \
     -v "$PWD/Gemfile":/work/Gemfile:ro \
@@ -32,7 +32,7 @@ if command -v docker &>/dev/null; then
     public.ecr.aws/docker/library/ruby:3.4.5-slim-trixie sh -c 'HOME=/tmp bundle lock --update --add-platform aarch64-linux x86_64-linux'
 elif command -v podman &>/dev/null; then
   podman container run \
-    --name update_lockfile$$ \
+    --name "update_lockfile_$(uuidgen | head -c8)" \
     --rm \
     --security-opt label=disable \
     -v "$PWD/Gemfile":/work/Gemfile:ro \

@@ -23,3 +23,16 @@ jobs:
         uses: actions/checkout@v6
       - name: Run bundle lock
         run: ./tools/update_lockfile.sh -e
+  check_for_new_release:
+    name: Check for new release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Run check_for_new_release.sh
+        run: |
+          ./tools/check_for_new_release.sh actions/checkout "$(grep -o 'actions/checkout@[^\/]*' .github/workflows/docker.yml | awk -F'@' 'NR==1{printf "%s", $2}')" '(v[0-9]+)'
+          ./tools/check_for_new_release.sh docker/build-push-action "$(grep -o 'docker/build-push-action@[^\/]*' .github/workflows/docker.yml | awk -F'@' 'NR==1{printf "%s", $2}')" '(v[0-9]+)'
+          ./tools/check_for_new_release.sh docker/login-action "$(grep -o 'docker/login-action@[^\/]*' .github/workflows/docker.yml | awk -F'@' 'NR==1{printf "%s", $2}')" '(v[0-9]+)'
+          ./tools/check_for_new_release.sh docker/setup-buildx-action "$(grep -o 'docker/setup-buildx-action@[^\/]*' .github/workflows/docker.yml | awk -F'@' 'NR==1{printf "%s", $2}')" '(v[0-9]+)'
+          ./tools/check_for_new_release.sh docker/setup-qemu-action "$(grep -o 'docker/setup-qemu-action@[^\/]*' .github/workflows/docker.yml | awk -F'@' 'NR==1{printf "%s", $2}')" '(v[0-9]+)'

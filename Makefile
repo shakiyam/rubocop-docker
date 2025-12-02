@@ -20,7 +20,15 @@ check_for_library_updates: ## Check for library updates
 	@echo -e "\033[36m$@\033[0m"
 	@./tools/update_lockfile.sh
 
-check_for_updates: check_for_image_updates check_for_library_updates ## Check for updates to all dependencies
+check_for_new_release: ## Check for new release
+	@echo -e "\033[36m$@\033[0m"
+	@./tools/check_for_new_release.sh actions/checkout "$(shell grep -o 'actions/checkout@[^\/]*' .github/workflows/*.{yml,yaml} | awk -F'@' 'NR==1{printf "%s", $$2}')" '(v[0-9]+)'
+	@./tools/check_for_new_release.sh docker/build-push-action "$(shell grep -o 'docker/build-push-action@[^\/]*' .github/workflows/docker.yml | awk -F'@' 'NR==1{printf "%s", $$2}')" '(v[0-9]+)'
+	@./tools/check_for_new_release.sh docker/login-action "$(shell grep -o 'docker/login-action@[^\/]*' .github/workflows/docker.yml | awk -F'@' 'NR==1{printf "%s", $$2}')" '(v[0-9]+)'
+	@./tools/check_for_new_release.sh docker/setup-buildx-action "$(shell grep -o 'docker/setup-buildx-action@[^\/]*' .github/workflows/docker.yml | awk -F'@' 'NR==1{printf "%s", $$2}')" '(v[0-9]+)'
+	@./tools/check_for_new_release.sh docker/setup-qemu-action "$(shell grep -o 'docker/setup-qemu-action@[^\/]*' .github/workflows/docker.yml | awk -F'@' 'NR==1{printf "%s", $$2}')" '(v[0-9]+)'
+
+check_for_updates: check_for_image_updates check_for_library_updates check_for_new_release ## Check for updates to all dependencies
 
 hadolint: ## Lint Dockerfile
 	@echo -e "\033[36m$@\033[0m"

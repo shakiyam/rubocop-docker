@@ -6,6 +6,8 @@ readonly SCRIPT_DIR
 # shellcheck disable=SC1091
 . "$SCRIPT_DIR"/colored_echo.sh
 
+readonly RUBY_IMAGE="public.ecr.aws/docker/library/ruby:3.4.8-slim-trixie"
+
 exit_flag=false
 while getopts ':e' flag; do
   case "${flag}" in
@@ -29,7 +31,7 @@ if command -v docker &>/dev/null; then
     -v "$PWD/Gemfile":/work/Gemfile:ro \
     -v "$PWD/Gemfile.lock":/work/Gemfile.lock \
     -w /work \
-    public.ecr.aws/docker/library/ruby:3.4.8-slim-trixie sh -c 'HOME=/tmp bundle lock --update --add-platform aarch64-linux x86_64-linux'
+    "$RUBY_IMAGE" sh -c 'HOME=/tmp bundle lock --update --add-platform aarch64-linux x86_64-linux'
 elif command -v podman &>/dev/null; then
   podman container run \
     --name "update_lockfile_$(uuidgen | head -c8)" \
@@ -38,7 +40,7 @@ elif command -v podman &>/dev/null; then
     -v "$PWD/Gemfile":/work/Gemfile:ro \
     -v "$PWD/Gemfile.lock":/work/Gemfile.lock \
     -w /work \
-    public.ecr.aws/docker/library/ruby:3.4.8-slim-trixie sh -c 'HOME=/tmp bundle lock --update --add-platform aarch64-linux x86_64-linux'
+    "$RUBY_IMAGE" sh -c 'HOME=/tmp bundle lock --update --add-platform aarch64-linux x86_64-linux'
 else
   echo_error 'Neither docker nor podman is installed.'
   exit 1

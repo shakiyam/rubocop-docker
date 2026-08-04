@@ -15,7 +15,8 @@ FROM docker.io/library/ruby:4.0.6-slim-trixie
 COPY --from=builder /usr/local/bundle /usr/local/bundle
 WORKDIR /work
 VOLUME /work
-USER nobody:nogroup
+# nobody:nogroup
+USER 65534:65534
 ENV HOME=/tmp
 ARG SOURCE_COMMIT
 ENV SOURCE_COMMIT=$SOURCE_COMMIT

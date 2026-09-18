@@ -6,7 +6,7 @@ ALL_TARGETS := $(shell grep -E -o ^[0-9A-Za-z_-]+: $(MAKEFILE_LIST) | sed 's/://
 .PHONY: $(ALL_TARGETS)
 .DEFAULT_GOAL := help
 
-all: check_for_updates format lint build ## Check for updates, format, lint, and build
+all: check_for_updates format lint build test ## Check for updates, format, lint, build, and test
 
 actionlint: ## Lint GitHub Actions workflow files
 	@echo -e "\033[36m$@\033[0m"
@@ -34,6 +34,9 @@ check_for_library_updates: ## Check for library updates
 
 check_for_updates: check_for_action_updates check_for_image_updates check_for_library_updates ## Check for updates to all dependencies
 
+check_local_image:
+	@./tools/check_local_image.sh ghcr.io/shakiyam/rubocop
+
 dockerfmt: ## Format Dockerfile
 	@echo -e "\033[36m$@\033[0m"
 	@./tools/dockerfmt.sh -i 2 -n -w Dockerfile
@@ -58,11 +61,15 @@ markdownlint: ## Lint Markdown files
 
 shellcheck: ## Lint shell scripts
 	@echo -e "\033[36m$@\033[0m"
-	@./tools/shellcheck.sh rubocop tools/*.sh
+	@./tools/shellcheck.sh rubocop test_rubocop.sh tools/*.sh
 
 shfmt: ## Format shell scripts
 	@echo -e "\033[36m$@\033[0m"
-	@./tools/shfmt.sh -l -w -i 2 -ci -bn rubocop tools/*.sh
+	@./tools/shfmt.sh -l -w -i 2 -ci -bn rubocop test_rubocop.sh tools/*.sh
+
+test: check_local_image ## Test Docker image
+	@echo -e "\033[36m$@\033[0m"
+	@./test_rubocop.sh
 
 yamlfmt: ## Format YAML files
 	@echo -e "\033[36m$@\033[0m"

@@ -4,7 +4,7 @@ COPY Gemfile /root/
 COPY Gemfile.lock /root/
 # hadolint ignore=DL3008
 RUN apt-get update \
-  && apt-get -y install --no-install-recommends build-essential \
+  && apt-get -y --no-install-recommends install build-essential \
   && rm -rf /var/lib/apt/lists/* \
   && bundle install \
   && rm -rf /root/.bundle/cache \

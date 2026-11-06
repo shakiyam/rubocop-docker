@@ -71,4 +71,37 @@ if ! OUTPUT=$(run_rubocop clean.rb 2>&1); then
   exit 1
 fi
 
+# TODO: Remove once base image includes json >= 2.19.9 (CVE-2026-33210, CVE-2026-54696)
+# shellcheck disable=SC2016
+if ! JSON_LOADED=$($CONTAINER_ENGINE container run \
+  --name "test_rubocop_$(uuidgen | head -c8)" \
+  --rm \
+  --pull=never \
+  "${ENGINE_OPTS[@]}" \
+  --entrypoint ruby \
+  "$IMAGE_NAME" -e '
+    require "json"
+    path = $LOADED_FEATURES.grep(%r{/json/version\.rb\z}).first.to_s
+    puts "#{JSON::VERSION} from #{path}"
+    exit(Gem::Version.new(JSON::VERSION) >= Gem::Version.new("2.19.9") && path.start_with?("/usr/local/bundle/"))
+  '); then
+  echo_error "Test failed: json ${JSON_LOADED} is loaded instead of >= 2.19.9 from /usr/local/bundle."
+  exit 1
+fi
+# shellcheck disable=SC2016
+if ! DEFAULT_JSON=$($CONTAINER_ENGINE container run \
+  --name "test_rubocop_$(uuidgen | head -c8)" \
+  --rm \
+  --pull=never \
+  "${ENGINE_OPTS[@]}" \
+  --entrypoint ruby \
+  "$IMAGE_NAME" -e '
+    specs = Dir.glob(File.join(Gem.default_specifications_dir, "json-*.gemspec"))
+    puts specs.join(" ")
+    exit(specs.empty?)
+  '); then
+  echo_error "Test failed: the default json gem remains in ${DEFAULT_JSON}."
+  exit 1
+fi
+
 echo_success 'Test passed: rubocop detected the offense and accepted the clean file.'
